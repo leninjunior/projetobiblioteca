@@ -1,0 +1,56 @@
+package controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import entity.Autor;
+import service.AutorService;
+
+@RestController
+@RequestMapping("/api/autores")
+public class AutorController {
+    @Autowired
+    private AutorService autorService;
+
+    @GetMapping("/todosautores")
+    public ResponseEntity<List<Autor>> listarAutores() {
+        List<Autor> autores = autorService.listarAutores();
+        return ResponseEntity.ok(autores);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Autor> buscarAutor(@PathVariable Long id) {
+        Autor autor = autorService.buscarAutor(id);
+        return ResponseEntity.ok(autor);
+    }
+
+    @PostMapping
+    public ResponseEntity<Autor> criarAutor(@RequestBody Autor autor) {
+        Autor novoAutor = autorService.criarAutor(autor);
+        return ResponseEntity.status(HttpStatus.CREATED).body(novoAutor);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Autor> atualizarAutor(@PathVariable Long id, @RequestBody Autor autor) {
+        Autor autorAtualizado = autorService.atualizarAutor(id, autor);
+        return ResponseEntity.ok(autorAtualizado);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> excluirAutor(@PathVariable Long id) {
+        autorService.excluirAutor(id);
+        return ResponseEntity.noContent().build();
+    }
+}
+
